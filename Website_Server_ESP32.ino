@@ -1,7 +1,7 @@
 /*
   -> Author: Owen Hartson
   -> Description: Simple Website Server for ESP32
-  -> Notes: SD card currently not working...
+  -> Notes: reading from an html file
   -> Pin Connections for SD Card:
       +---------------------+------------+
       | SD Card Reader Pins | ESP32 Pins |
@@ -160,8 +160,8 @@ void HandleOnConnect(){
 /*============================== SEND HTML ==============================*/
 /*=======================================================================*/
 String SendHTML(uint8_t led1stat){
-  String websiteCode = ReadFile("/website.txt");
-  
+  String websiteCode = ReadFile("/website.html");
+
   return websiteCode;
 }
 
@@ -169,14 +169,15 @@ String SendHTML(uint8_t led1stat){
 /*============================== READ FILE ==============================*/
 /*=======================================================================*/
 String ReadFile(const char * path){
-  String fileStuff;
+  String fileStuff = "";
 
   myFile = SD.open(path); // open the file for reading
   if(myFile){
     Serial.printf("Reading file from %s\n", path);
     while (myFile.available()) {  // read from the file until there's nothing else in it:
       // Serial.write(myFile.read());
-      fileStuff += myFile.read();
+      char c = myFile.read();
+      fileStuff.concat(c);
     }
     myFile.close(); // close the file:
   }else{
